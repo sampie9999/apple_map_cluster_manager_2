@@ -5,7 +5,7 @@ import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:google_maps_cluster_manager_2/google_maps_cluster_manager.dart';
+import 'package:google_maps_cluster_manager_2/google_maps_cluster_manager_2.dart';
 import 'package:google_maps_cluster_manager_2/src/max_dist_clustering.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart' hide Cluster;
 
