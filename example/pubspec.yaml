@@ -12,17 +12,18 @@ description: A new Flutter project.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 version: 1.0.0+1
+publish_to: "none"
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
+  sdk: ^3.2.6
 
 dependencies:
   flutter:
     sdk: flutter
 
-  google_maps_flutter: ^2.5.2
-  google_maps_flutter_web: ^0.5.4+3
-  google_maps_cluster_manager:
+  google_maps_flutter: ^2.6.0
+  google_maps_flutter_web: ^0.5.6+2
+  google_maps_cluster_manager_2:
     path: ../
 
 dev_dependencies:
