@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'dart:math';
 
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
@@ -36,27 +38,27 @@ class DistUtils {
     if (distCache[(point1, point2)] != null) {
       return distCache[(point1, point2)]!;
     }
-    double meterPerPixel = _getScalingFactor(zoomLevel);
-    double dist = getDistanceFromLatLonInKm(point1.latitude, point1.longitude,
-            point2.latitude, point2.longitude) /
+    final meterPerPixel = _getScalingFactor(zoomLevel);
+    final dist = getDistanceFromLatLonInKm(
+          point1.latitude,
+          point1.longitude,
+          point2.latitude,
+          point2.longitude,
+        ) /
         (meterPerPixel / 1000);
     // print("dist is $x");
     distCache[(point1, point2)] = dist;
     return dist;
   }
 
-  double getDistanceFromLatLonInKm(
-      double lat1, double lon1, double lat2, double lon2) {
-    var R = 6371; // Radius of the earth in km
-    var dLat = _degreeToRadian(lat2 - lat1);
-    var dLon = _degreeToRadian(lon2 - lon1);
-    var a = sin(dLat / 2) * sin(dLat / 2) +
-        cos(_degreeToRadian(lat1)) *
-            cos(_degreeToRadian(lat2)) *
-            sin(dLon / 2) *
-            sin(dLon / 2);
-    var c = 2 * atan2(sqrt(a), sqrt(1 - a));
-    var d = R * c; // Distance in km
+  double getDistanceFromLatLonInKm(double lat1, double lon1, double lat2, double lon2) {
+    const R = 6371; // Radius of the earth in km
+    final dLat = _degreeToRadian(lat2 - lat1);
+    final dLon = _degreeToRadian(lon2 - lon1);
+    final a = sin(dLat / 2) * sin(dLat / 2) +
+        cos(_degreeToRadian(lat1)) * cos(_degreeToRadian(lat2)) * sin(dLon / 2) * sin(dLon / 2);
+    final c = 2 * atan2(sqrt(a), sqrt(1 - a));
+    final d = R * c; // Distance in km
     return d;
   }
 
@@ -65,51 +67,29 @@ class DistUtils {
   }
 
   double _getScalingFactor(int zoomLevel) {
-    switch (zoomLevel) {
-      case 0:
-        return 156412;
-      case 1:
-        return 78206;
-      case 2:
-        return 39103;
-      case 3:
-        return 19551;
-      case 4:
-        return 9776;
-      case 5:
-        return 4888;
-      case 6:
-        return 2444;
-      case 7:
-        return 1222;
-      case 8:
-        return 610.984;
-      case 9:
-        return 305.492;
-      case 10:
-        return 152.746;
-      case 11:
-        return 76.373;
-      case 12:
-        return 38.187;
-      case 13:
-        return 19.093;
-      case 14:
-        return 9.547;
-      case 15:
-        return 4.773;
-      case 16:
-        return 2.387;
-      case 17:
-        return 1.193;
-      case 18:
-        return 0.596;
-      case 19:
-        return 0.298;
-      case 20:
-        return 0.149;
-      default:
-        return 0.149;
-    }
+    return switch (zoomLevel) {
+      0 => 156412,
+      1 => 78206,
+      2 => 39103,
+      3 => 19551,
+      4 => 9776,
+      5 => 4888,
+      6 => 2444,
+      7 => 1222,
+      8 => 610.984,
+      9 => 305.492,
+      10 => 152.746,
+      11 => 76.373,
+      12 => 38.187,
+      13 => 19.093,
+      14 => 9.547,
+      15 => 4.773,
+      16 => 2.387,
+      17 => 1.193,
+      18 => 0.596,
+      19 => 0.298,
+      20 => 0.149,
+      _ => 0.149
+    };
   }
 }

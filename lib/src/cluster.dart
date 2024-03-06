@@ -1,30 +1,31 @@
-import 'package:google_maps_cluster_manager/google_maps_cluster_manager.dart';
+// ignore_for_file: lines_longer_than_80_chars
+
+import 'package:flutter/foundation.dart';
+import 'package:google_maps_cluster_manager_2/google_maps_cluster_manager.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 
+@immutable
 class Cluster<T extends ClusterItem> {
-  final LatLng location;
-  final Iterable<T> items;
+  const Cluster(this.items, this.location);
 
-  Cluster(this.items, this.location);
-
-  Cluster.fromItems(Iterable<T> items)
-      : this.items = items,
-        this.location = LatLng(
-            items.fold<double>(0.0, (p, c) => p + c.location.latitude) /
-                items.length,
-            items.fold<double>(0.0, (p, c) => p + c.location.longitude) /
-                items.length);
+  Cluster.fromItems(this.items)
+      : location = LatLng(
+          items.fold<double>(0, (p, c) => p + c.location.latitude) / items.length,
+          items.fold<double>(0, (p, c) => p + c.location.longitude) / items.length,
+        );
 
   //location becomes weighted avarage lat lon
   Cluster.fromClusters(Cluster<T> cluster1, Cluster<T> cluster2)
-      : this.items = cluster1.items.toSet()..addAll(cluster2.items.toSet()),
-        this.location = LatLng(
-            (cluster1.location.latitude * cluster1.count +
-                    cluster2.location.latitude * cluster2.count) /
-                (cluster1.count + cluster2.count),
-            (cluster1.location.longitude * cluster1.count +
-                    cluster2.location.longitude * cluster2.count) /
-                (cluster1.count + cluster2.count));
+      : items = cluster1.items.toSet()..addAll(cluster2.items.toSet()),
+        location = LatLng(
+          (cluster1.location.latitude * cluster1.count + cluster2.location.latitude * cluster2.count) /
+              (cluster1.count + cluster2.count),
+          (cluster1.location.longitude * cluster1.count + cluster2.location.longitude * cluster2.count) /
+              (cluster1.count + cluster2.count),
+        );
+
+  final LatLng location;
+  final Iterable<T> items;
 
   /// Get number of clustered items
   int get count => items.length;
@@ -34,10 +35,7 @@ class Cluster<T extends ClusterItem> {
 
   /// Basic cluster marker id
   String getId() {
-    return location.latitude.toString() +
-        "_" +
-        location.longitude.toString() +
-        "_$count";
+    return '${location.latitude}_${location.longitude}_$count';
   }
 
   @override
@@ -45,6 +43,9 @@ class Cluster<T extends ClusterItem> {
     return 'Cluster of $count $T (${location.latitude}, ${location.longitude})';
   }
 
-  bool operator ==(o) => o is Cluster && items == o.items;
+  @override
+  bool operator ==(Object other) => other is Cluster && items == other.items;
+
+  @override
   int get hashCode => items.hashCode;
 }

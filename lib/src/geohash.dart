@@ -3,6 +3,8 @@
 // Copyright (c) 2015-2018, llamadonica. All rights reserved. Use of this source code
 // is governed by a BSD-style license that can be found in the LICENSE file.
 
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'dart:math';
 
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
@@ -10,7 +12,7 @@ import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platf
 /// A collection of static functions to work with geohashes, as exlpained
 /// [here](https://en.wikipedia.org/wiki/Geohash)
 class Geohash {
-  static const Map<String, int> _base32CharToNumber = const <String, int>{
+  static const Map<String, int> _base32CharToNumber = <String, int>{
     '0': 0,
     '1': 1,
     '2': 2,
@@ -42,9 +44,10 @@ class Geohash {
     'w': 28,
     'x': 29,
     'y': 30,
-    'z': 31
+    'z': 31,
   };
-  static const List<String> _base32NumberToChar = const <String>[
+
+  static const List<String> _base32NumberToChar = <String>[
     '0',
     '1',
     '2',
@@ -76,15 +79,17 @@ class Geohash {
     'w',
     'x',
     'y',
-    'z'
+    'z',
   ];
 
   /// Encode a latitude and longitude pair into a  geohash string.
-  static String encode(final LatLng latLng, {final int codeLength = 12}) {
+  static String encode({
+    required LatLng latLng,
+    required int codeLength,
+  }) {
     if (codeLength > 20 || (identical(1.0, 1) && codeLength > 12)) {
       //Javascript can only handle 32 bit ints reliably.
-      throw ArgumentError(
-          'latitude and longitude are not precise enough to encode $codeLength characters');
+      throw ArgumentError('latitude and longitude are not precise enough to encode $codeLength characters');
     }
     final latitudeBase2 = (latLng.latitude + 90) * (pow(2.0, 52) / 180);
     final longitudeBase2 = (latLng.longitude + 180) * (pow(2.0, 52) / 360);
@@ -97,12 +102,12 @@ class Geohash {
         ? (latitudeBase2 / (pow(2.0, 52 - latitudeBits))).floor()
         : latitudeBase2.floor() >> (52 - latitudeBits);
 
-    final stringBuffer = [];
-    for (var localCodeLength = codeLength;
-        localCodeLength > 0;
-        localCodeLength--) {
-      int bigEndCode, littleEndCode;
-      if (localCodeLength % 2 == 0) {
+    final stringBuffer = <String>[];
+    for (var localCodeLength = codeLength; localCodeLength > 0; localCodeLength--) {
+      int bigEndCode;
+      int littleEndCode;
+
+      if (localCodeLength.isEven) {
         //Even slot. Latitude is more significant.
         bigEndCode = latitudeCode;
         littleEndCode = longitudeCode;
@@ -130,23 +135,19 @@ class Geohash {
     final codeLength = geohash.length;
     if (codeLength > 20 || (identical(1.0, 1) && codeLength > 12)) {
       //Javascript can only handle 32 bit ints reliably.
-      throw ArgumentError(
-          'latitude and longitude are not precise enough to encode $codeLength characters');
+      throw ArgumentError('latitude and longitude are not precise enough to encode $codeLength characters');
     }
     var latitudeInt = 0;
     var longitudeInt = 0;
     var longitudeFirst = true;
-    for (var character
-        in geohash.codeUnits.map((r) => String.fromCharCode(r))) {
+    for (final character in geohash.codeUnits.map(String.fromCharCode)) {
       int? thisSequence;
       try {
         thisSequence = _base32CharToNumber[character];
       } on Exception catch (_) {
         throw ArgumentError('$geohash was not a geohash string');
       }
-      final bigBits = ((thisSequence! & 16) >> 2) |
-          ((thisSequence & 4) >> 1) |
-          (thisSequence & 1);
+      final bigBits = ((thisSequence! & 16) >> 2) | ((thisSequence & 4) >> 1) | (thisSequence & 1);
       final smallBits = ((thisSequence & 8) >> 2) | ((thisSequence & 2) >> 1);
       if (longitudeFirst) {
         longitudeInt = (longitudeInt << 3) | bigBits;
@@ -170,8 +171,7 @@ class Geohash {
       final longitude = longitudeFloat * (360 / pow(2.0, 52)) - 180;
       final num height = latitudeDiff * (180 / pow(2.0, 52));
       final num width = longitudeDiff * (360 / pow(2.0, 52));
-      return Rectangle<double>(
-          latitude, longitude, height.toDouble(), width.toDouble());
+      return Rectangle<double>(latitude, longitude, height.toDouble(), width.toDouble());
     }
 
     longitudeInt = longitudeInt << (52 - longitudeBits);
