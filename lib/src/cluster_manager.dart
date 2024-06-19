@@ -17,6 +17,11 @@ class MaxDistParams {
   final double epsilon;
 }
 
+extension _Add on ScreenCoordinate {
+  ScreenCoordinate add({int x = 0, int y = 0}) =>
+      ScreenCoordinate(x: this.x + x, y: this.y + y);
+}
+
 class ClusterManager<T extends ClusterItem> {
   ClusterManager(
     this._items,
@@ -28,11 +33,25 @@ class ClusterManager<T extends ClusterItem> {
     this.clusterAlgorithm = ClusterAlgorithm.geoHash,
     this.maxDistParams,
     this.stopClusteringZoom,
+    EdgeInsets? padding,
+    double? devicePixelRatio,
   })  : markerBuilder = markerBuilder ?? _basicMarkerBuilder,
         assert(
           levels.length <= precision,
           'Levels length should be less than or equal to precision',
-        );
+        ),
+        devicePixelRatio = devicePixelRatio ??
+            WidgetsBinding
+                .instance.platformDispatcher.views.first.devicePixelRatio {
+    this.padding = padding != null
+        ? EdgeInsets.only(
+            top: padding.top * this.devicePixelRatio,
+            left: padding.left * this.devicePixelRatio,
+            right: padding.right * this.devicePixelRatio,
+            bottom: padding.bottom * this.devicePixelRatio,
+          )
+        : padding;
+  }
 
   /// Method to build markers
   final Future<Marker> Function(Cluster<T>) markerBuilder;
@@ -56,6 +75,12 @@ class ClusterManager<T extends ClusterItem> {
 
   /// Zoom level to stop cluster rendering
   final double? stopClusteringZoom;
+
+  /// The padding that is given to GoogleMap.padding
+  late final EdgeInsets? padding;
+
+  /// The pixelRatio of the device
+  final double devicePixelRatio;
 
   /// Precision of the geohash
   static const precision = kIsWeb ? 12 : 20;
@@ -112,17 +137,52 @@ class ClusterManager<T extends ClusterItem> {
     }
   }
 
+  Future<LatLngBounds> _addPadding(LatLngBounds mapBounds) async {
+    final northEastL = mapBounds.northeast;
+    final southWestL = mapBounds.southwest;
+
+    if (padding != null) {
+      final [northEastC, southWestC] = await Future.wait([
+        GoogleMapsFlutterPlatform.instance
+            .getScreenCoordinate(northEastL, mapId: _mapId!),
+        GoogleMapsFlutterPlatform.instance
+            .getScreenCoordinate(southWestL, mapId: _mapId!),
+      ]);
+
+      final [northEastP, southWestP] = await Future.wait([
+        GoogleMapsFlutterPlatform.instance.getLatLng(
+          northEastC.add(
+            x: padding!.right.toInt(),
+            y: -padding!.top.toInt(),
+          ),
+          mapId: _mapId!,
+        ),
+        GoogleMapsFlutterPlatform.instance.getLatLng(
+          southWestC.add(
+            x: -padding!.left.toInt(),
+            y: padding!.bottom.toInt(),
+          ),
+          mapId: _mapId!,
+        ),
+      ]);
+      return LatLngBounds(southwest: southWestP, northeast: northEastP);
+    }
+    return LatLngBounds(southwest: southWestL, northeast: northEastL);
+  }
+
   /// Retrieve cluster markers
   Future<List<Cluster<T>>> getMarkers() async {
     if (_mapId == null) return List.empty();
 
     final mapBounds = await GoogleMapsFlutterPlatform.instance.getVisibleRegion(mapId: _mapId!);
 
+    final paddedBounds = await _addPadding(mapBounds);
+
     late LatLngBounds inflatedBounds;
     if (clusterAlgorithm == ClusterAlgorithm.geoHash) {
-      inflatedBounds = _inflateBounds(mapBounds);
+      inflatedBounds = _inflateBounds(paddedBounds);
     } else {
-      inflatedBounds = mapBounds;
+      inflatedBounds = paddedBounds;
     }
 
     final visibleItems = items.where((i) {
