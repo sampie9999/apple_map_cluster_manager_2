@@ -1,3 +1,6 @@
+## 3.2.0
+ - Add padding to ClusterManager
+
 ## 3.1.0
 
 - Bump dependency versions
