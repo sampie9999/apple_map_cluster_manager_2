@@ -177,12 +177,10 @@ class ClusterManager<T extends ClusterItem> {
 
     final paddedBounds = await _addPadding(mapBounds);
 
-    late LatLngBounds inflatedBounds;
-    if (clusterAlgorithm == ClusterAlgorithm.geoHash) {
-      inflatedBounds = _inflateBounds(paddedBounds);
-    } else {
-      inflatedBounds = paddedBounds;
-    }
+    final inflatedBounds = switch (clusterAlgorithm) {
+      ClusterAlgorithm.geoHash => _inflateBounds(paddedBounds),
+      _ => paddedBounds,
+    };
 
     final visibleItems = items.where((i) {
       return inflatedBounds.contains(i.location);
