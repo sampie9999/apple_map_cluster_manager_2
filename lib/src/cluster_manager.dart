@@ -137,37 +137,36 @@ class ClusterManager<T extends ClusterItem> {
     }
   }
 
-  Future<LatLngBounds> _addPadding(LatLngBounds mapBounds) async {
+    Future<LatLngBounds> _addPadding(LatLngBounds mapBounds) async {
     final northEastL = mapBounds.northeast;
     final southWestL = mapBounds.southwest;
 
-    if (padding != null) {
-      final [northEastC, southWestC] = await Future.wait([
-        GoogleMapsFlutterPlatform.instance
-            .getScreenCoordinate(northEastL, mapId: _mapId!),
-        GoogleMapsFlutterPlatform.instance
-            .getScreenCoordinate(southWestL, mapId: _mapId!),
-      ]);
-
-      final [northEastP, southWestP] = await Future.wait([
-        GoogleMapsFlutterPlatform.instance.getLatLng(
-          northEastC.add(
-            x: padding!.right.toInt(),
-            y: -padding!.top.toInt(),
-          ),
-          mapId: _mapId!,
-        ),
-        GoogleMapsFlutterPlatform.instance.getLatLng(
-          southWestC.add(
-            x: -padding!.left.toInt(),
-            y: padding!.bottom.toInt(),
-          ),
-          mapId: _mapId!,
-        ),
-      ]);
-      return LatLngBounds(southwest: southWestP, northeast: northEastP);
+    if (padding == null) {
+      return LatLngBounds(southwest: southWestL, northeast: northEastL);
     }
-    return LatLngBounds(southwest: southWestL, northeast: northEastL);
+
+    final [northEastC, southWestC] = await Future.wait([
+      GoogleMapsFlutterPlatform.instance.getScreenCoordinate(northEastL, mapId: _mapId!),
+      GoogleMapsFlutterPlatform.instance.getScreenCoordinate(southWestL, mapId: _mapId!),
+    ]);
+
+    final [northEastP, southWestP] = await Future.wait([
+      GoogleMapsFlutterPlatform.instance.getLatLng(
+        northEastC.add(
+          x: padding!.right.toInt(),
+          y: -padding!.top.toInt(),
+        ),
+        mapId: _mapId!,
+      ),
+      GoogleMapsFlutterPlatform.instance.getLatLng(
+        southWestC.add(
+          x: -padding!.left.toInt(),
+          y: padding!.bottom.toInt(),
+        ),
+        mapId: _mapId!,
+      ),
+    ]);
+    return LatLngBounds(southwest: southWestP, northeast: northEastP);
   }
 
   /// Retrieve cluster markers
