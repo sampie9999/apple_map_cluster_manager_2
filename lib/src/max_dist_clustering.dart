@@ -1,7 +1,7 @@
 // ignore_for_file: library_private_types_in_public_api
 
-import 'package:google_maps_cluster_manager_2/google_maps_cluster_manager_2.dart';
-import 'package:google_maps_cluster_manager_2/src/common.dart';
+import 'package:apple_maps_cluster_manager_2/google_maps_cluster_manager_2.dart';
+import 'package:apple_maps_cluster_manager_2/src/common.dart';
 
 class _MinDistCluster<T extends ClusterItem> {
   _MinDistCluster(this.cluster, this.dist);
