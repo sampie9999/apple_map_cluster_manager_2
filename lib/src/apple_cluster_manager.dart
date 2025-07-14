@@ -7,10 +7,10 @@ import 'package:apple_maps_flutter/apple_maps_flutter.dart' as apple_map;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-enum ClusterAlgorithm { geoHash, maxDist }
+enum ClusterAlgorithmApple { geoHash, maxDist }
 
-class MaxDistParams {
-  MaxDistParams(this.epsilon);
+class MaxDistParamsApple {
+  MaxDistParamsApple(this.epsilon);
 
   final double epsilon;
 }
@@ -71,7 +71,7 @@ class AppleClusterManager<T extends AppleClusterItemInterface> {
         this.levels = const [1, 4.25, 6.75, 8.25, 11.5, 14.5, 16.0, 16.5, 20.0],
         this.extraPercent = 0.5,
         this.maxItemsForMaxDistAlgo = 200,
-        this.clusterAlgorithm = ClusterAlgorithm.geoHash,
+        this.clusterAlgorithm = ClusterAlgorithmApple.geoHash,
         this.maxDistParams,
         this.stopClusteringZoom,
         double? devicePixelRatio,
@@ -88,8 +88,8 @@ class AppleClusterManager<T extends AppleClusterItemInterface> {
   final void Function(Set<apple_map.Annotation>) updateAnnotations;
   final List<double> levels;
   final double extraPercent;
-  final ClusterAlgorithm clusterAlgorithm;
-  final MaxDistParams? maxDistParams;
+  final ClusterAlgorithmApple clusterAlgorithm;
+  final MaxDistParamsApple? maxDistParams;
   final double? stopClusteringZoom;
   final double devicePixelRatio;
   static const precision = kIsWeb ? 12 : 20;
@@ -137,7 +137,7 @@ class AppleClusterManager<T extends AppleClusterItemInterface> {
 
     final mapBounds = await _mapController!.getVisibleRegion();
     final inflatedBounds = switch (clusterAlgorithm) {
-      ClusterAlgorithm.geoHash => _inflateBounds(mapBounds),
+      ClusterAlgorithmApple.geoHash => _inflateBounds(mapBounds),
       _ => mapBounds,
     };
 
@@ -149,7 +149,7 @@ class AppleClusterManager<T extends AppleClusterItemInterface> {
 
     List<AppleCluster<T>> annotations;
 
-    if (clusterAlgorithm == ClusterAlgorithm.geoHash || visibleItems.length >= maxItemsForMaxDistAlgo) {
+    if (clusterAlgorithm == ClusterAlgorithmApple.geoHash || visibleItems.length >= maxItemsForMaxDistAlgo) {
       final level = _findLevel(levels);
       annotations = _computeClusters(visibleItems, List.empty(growable: true), level: level);
     } else {
