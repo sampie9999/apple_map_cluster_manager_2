@@ -7,3 +7,4 @@ export 'src/cluster.dart';
 export 'src/cluster_item.dart';
 export 'src/cluster_manager.dart';
 export 'src/geohash.dart';
+export 'src/apple_geohash.dart';

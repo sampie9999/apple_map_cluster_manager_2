@@ -6,6 +6,7 @@ import 'dart:ui';
 import 'package:apple_maps_flutter/apple_maps_flutter.dart' as apple_map;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'apple_cluster_item.dart';
 
 enum ClusterAlgorithmApple { geoHash, maxDist }
 
@@ -15,13 +16,7 @@ class MaxDistParamsApple {
   final double epsilon;
 }
 
-// Interface thay thế cho ClusterItem để sử dụng apple_map.LatLng
-abstract class AppleClusterItemInterface {
-  apple_map.LatLng get location;
-  String get geohash;
-}
-
-class AppleCluster<T extends AppleClusterItemInterface> {
+class AppleCluster<T extends AppleClusterItem> {
   AppleCluster(this.items);
 
   factory AppleCluster.fromItems(List<T> items) => AppleCluster(items);
@@ -63,7 +58,7 @@ class AppleCluster<T extends AppleClusterItemInterface> {
   }
 }
 
-class AppleClusterManager<T extends AppleClusterItemInterface> {
+class AppleClusterManager<T extends AppleClusterItem> {
   AppleClusterManager(
       this._items,
       this.updateAnnotations, {
@@ -101,7 +96,7 @@ class AppleClusterManager<T extends AppleClusterItemInterface> {
 
   Future<void> setMapController(apple_map.AppleMapController controller, {bool withUpdate = true}) async {
     _mapController = controller;
-    _zoom = (await controller.getZoomLevel())!;
+    _zoom = await controller.getZoomLevel() ?? 14.0;
     if (withUpdate) updateMap();
   }
 
@@ -199,7 +194,6 @@ class AppleClusterManager<T extends AppleClusterItemInterface> {
   }
 
   List<AppleCluster<T>> _computeClustersWithMaxDist(List<T> inputItems, double zoom) {
-    // Simplified MaxDist clustering without ScreenCoordinate
     final clusters = <AppleCluster<T>>[];
     final remainingItems = inputItems.toList();
     final epsilon = maxDistParams?.epsilon ?? 20;
