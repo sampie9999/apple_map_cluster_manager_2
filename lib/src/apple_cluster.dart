@@ -1,6 +1,6 @@
 // ignore_for_file: lines_longer_than_80_chars
 
-import 'package:apple_maps_cluster_manager_2/google_maps_cluster_manager_2.dart';
+import 'package:flutter_cluster_manager_2/google_maps_cluster_manager_2.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:apple_maps_flutter/apple_maps_flutter.dart' as apple_map;
