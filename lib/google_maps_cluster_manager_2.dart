@@ -2,6 +2,7 @@
 
 library google_maps_cluster_manager;
 
+export 'src/apple_cluster.dart';
 export 'src/apple_cluster_item.dart';
 export 'src/apple_cluster_manager.dart';
 export 'src/apple_geohash.dart';
