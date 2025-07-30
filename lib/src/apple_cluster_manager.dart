@@ -3,6 +3,7 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:apple_maps_cluster_manager_2/google_maps_cluster_manager_2.dart';
 import 'package:apple_maps_flutter/apple_maps_flutter.dart' as apple_map;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -16,47 +17,47 @@ class MaxDistParamsApple {
   final double epsilon;
 }
 
-class AppleCluster<T extends AppleClusterItem> {
-  AppleCluster(this.items);
-
-  factory AppleCluster.fromItems(List<T> items) => AppleCluster(items);
-
-  final List<T> items;
-
-  bool get isMultiple => items.length > 1;
-
-  int get count => items.length;
-
-  String getId() => items.map((m) => m.geohash).join();
-
-  apple_map.LatLng get location {
-    if (items.length == 1) return items.first.location;
-
-    var x = 0.0;
-    var y = 0.0;
-    var z = 0.0;
-
-    for (final item in items) {
-      final lat = item.location.latitude * pi / 180;
-      final lng = item.location.longitude * pi / 180;
-
-      x += cos(lat) * cos(lng);
-      y += cos(lat) * sin(lng);
-      z += sin(lat);
-    }
-
-    final length = items.length;
-    x = x / length;
-    y = y / length;
-    z = z / length;
-
-    final centralLng = atan2(y, x);
-    final centralSqrt = sqrt(x * x + y * y);
-    final centralLat = atan2(z, centralSqrt);
-
-    return apple_map.LatLng(centralLat * 180 / pi, centralLng * 180 / pi);
-  }
-}
+// class AppleCluster<T extends AppleClusterItem> {
+//   AppleCluster(this.items);
+//
+//   factory AppleCluster.fromItems(List<T> items) => AppleCluster(items);
+//
+//   final List<T> items;
+//
+//   bool get isMultiple => items.length > 1;
+//
+//   int get count => items.length;
+//
+//   String getId() => items.map((m) => m.geohash).join();
+//
+//   apple_map.LatLng get location {
+//     if (items.length == 1) return items.first.location;
+//
+//     var x = 0.0;
+//     var y = 0.0;
+//     var z = 0.0;
+//
+//     for (final item in items) {
+//       final lat = item.location.latitude * pi / 180;
+//       final lng = item.location.longitude * pi / 180;
+//
+//       x += cos(lat) * cos(lng);
+//       y += cos(lat) * sin(lng);
+//       z += sin(lat);
+//     }
+//
+//     final length = items.length;
+//     x = x / length;
+//     y = y / length;
+//     z = z / length;
+//
+//     final centralLng = atan2(y, x);
+//     final centralSqrt = sqrt(x * x + y * y);
+//     final centralLat = atan2(z, centralSqrt);
+//
+//     return apple_map.LatLng(centralLat * 180 / pi, centralLng * 180 / pi);
+//   }
+// }
 
 class AppleClusterManager<T extends AppleClusterItem> {
   AppleClusterManager(
