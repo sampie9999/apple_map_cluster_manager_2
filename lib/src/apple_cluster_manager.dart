@@ -3,7 +3,7 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:flutter_cluster_manager_2/google_maps_cluster_manager_2.dart';
+import 'package:flutter_cluster_manager_2/flutter_cluster_manager_2.dart';
 import 'package:apple_maps_flutter/apple_maps_flutter.dart' as apple_map;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -184,15 +184,15 @@ class AppleClusterManager<T extends AppleClusterItem> {
     return 1;
   }
 
-  int _getZoomLevel(double zoom) {
-    for (var i = levels.length - 1; i >= 0; i--) {
-      if (levels[i] <= zoom) {
-        return levels[i].toInt();
-      }
-    }
-
-    return 1;
-  }
+  // int _getZoomLevel(double zoom) {
+  //   for (var i = levels.length - 1; i >= 0; i--) {
+  //     if (levels[i] <= zoom) {
+  //       return levels[i].toInt();
+  //     }
+  //   }
+  //
+  //   return 1;
+  // }
 
   List<AppleCluster<T>> _computeClustersWithMaxDist(List<T> inputItems, double zoom) {
     final clusters = <AppleCluster<T>>[];

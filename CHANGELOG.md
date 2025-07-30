@@ -1,3 +1,6 @@
+## 3.2.1
+- First complete version for flutter_cluster_manager_2 package
+
 ## 3.2.0
  - Add padding to ClusterManager
 

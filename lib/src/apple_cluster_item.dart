@@ -1,5 +1,5 @@
 import 'package:apple_maps_flutter/apple_maps_flutter.dart';
-import 'package:flutter_cluster_manager_2/google_maps_cluster_manager_2.dart';
+import 'package:flutter_cluster_manager_2/flutter_cluster_manager_2.dart';
 
 mixin AppleClusterItem {
   LatLng get location;
