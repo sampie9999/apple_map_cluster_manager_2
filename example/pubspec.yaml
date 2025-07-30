@@ -23,7 +23,7 @@ dependencies:
 
   google_maps_flutter: ^2.6.0
   google_maps_flutter_web: ^0.5.6+2
-  apple_maps_cluster_manager_2:
+  flutter_cluster_manager_2:
     path: ../
 
 dev_dependencies:
