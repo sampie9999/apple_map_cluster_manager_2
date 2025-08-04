@@ -7,7 +7,6 @@ import 'package:flutter_cluster_manager_2/flutter_cluster_manager_2.dart';
 import 'package:apple_maps_flutter/apple_maps_flutter.dart' as apple_map;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'apple_cluster_item.dart';
 
 enum ClusterAlgorithmApple { geoHash, maxDist }
 
