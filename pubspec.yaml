@@ -23,7 +23,6 @@ dev_dependencies:
 topics:
   - google-maps
   - google-maps-flutter
-  - apple-maps
   - apple-maps-flutter
   - map
   - cluster
