@@ -136,7 +136,7 @@ You are able to add an new item to the map by calling `addItem` method on your `
 You can customize the icon of a cluster by using `Future<Annotation> Function(Cluster<T extends AppleClusterItem>) annotationBuilder` parameter.
 
 ```dart
-static Future<Marker> Function(ClusterApple) get annotationBuilder => (cluster) async {
+static Future<Annotation> Function(ClusterApple) get annotationBuilder => (cluster) async {
   return Annotation(
     annotationId: AnnotationId(cluster.getId()),
     position: cluster.location,
